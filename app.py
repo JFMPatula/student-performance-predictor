@@ -433,11 +433,19 @@ elif page == "📈 Results & Comparison":
             if cm.ndim == 1:
                 cm = cm.reshape((int(np.sqrt(len(cm))), int(np.sqrt(len(cm)))))
 
+            # Generate labels dynamically based on matrix size
+            n_classes = cm.shape[0]
+            class_labels = ["Poor", "Average", "Good", "Excellent"][:n_classes]
+            
+            # If there are fewer than 4 classes, use default names
+            if n_classes > len(class_labels):
+                class_labels = [f"Class {i}" for i in range(n_classes)]
+
             fig_cm = px.imshow(
                 cm,
                 labels=dict(x="Predicted", y="Actual"),
-                x=["Poor", "Average", "Good", "Excellent"],
-                y=["Poor", "Average", "Good", "Excellent"],
+                x=class_labels,
+                y=class_labels,
                 color_continuous_scale="Blues",
                 text_auto=True,
             )
