@@ -77,8 +77,7 @@ page = st.sidebar.radio(
         "🔧 Data Preprocessing",
         "🤖 Model Training",
         "📈 Results & Comparison",
-        "🔮 Make Predictions",
-        "📄 Documentation"
+        "🔮 Make Predictions"
     ]
 )
 
@@ -187,25 +186,22 @@ elif page == "📁 Data Upload":
 
     if st.button("Generate Sample Student Dataset"):
         try:
-            import subprocess
-
-            subprocess.run(
-                [sys.executable, "generate_dataset.py"],
-                cwd=str(Path(__file__).parent),
-                check=True,
-            )
-
+            # Clear previous session state
+            st.session_state.data = None
+            st.session_state.preprocessor = None
+            st.session_state.models_trained = False
+            
             data_path = Path(__file__).parent / "data" / "student_performance.csv"
             if data_path.exists():
                 preprocessor = DataPreprocessor()
                 st.session_state.data = preprocessor.load_data(data_path)
                 st.session_state.preprocessor = preprocessor
-                st.success("✅ Sample dataset generated and loaded!")
+                st.success("✅ Sample dataset loaded successfully!")
                 st.rerun()
             else:
-                st.error("❌ Generated dataset not found.")
+                st.error("❌ Dataset file not found.")
         except Exception as e:
-            st.error(f"❌ Error generating sample dataset: {e}")
+            st.error(f"❌ Error loading sample dataset: {e}")
 
 # ===============================================================
 # 🔧 DATA PREPROCESSING
@@ -498,69 +494,3 @@ elif page == "🔮 Make Predictions":
 
             except Exception as e:
                 st.error(f"❌ Prediction error: {e}")
-
-# ===============================================================
-# 📄 DOCUMENTATION
-# ===============================================================
-
-elif page == "📄 Documentation":
-    st.title("📄 Project Documentation")
-    st.markdown("---")
-
-    st.markdown(
-        """
-        ## Business Intelligence Predictive Modeling Application
-        ### Project Information
-        - **Course:** IS 108 - Intelligence System  
-        - **Academic Year:** 2025–2026  
-        - **Project Type:** Business Intelligence and Predictive Modeling  
-        - **Team Size:** 3 Members  
-        """
-    )
-
-    st.markdown(
-        """
-        ### Business Problem: Student Performance Prediction
-
-        Predict academic performance based on:
-        - Study hours, attendance, GPA, sleep hours, income, 
-          internet speed, subjects, activities, parental support, motivation
-        """
-    )
-
-    st.markdown(
-        """
-        ### Machine Learning Models
-        1. **KNN:** Simple, interpretable — uses k nearest neighbors  
-        2. **SVM:** Finds optimal separating hyperplane  
-        3. **ANN:** Neural network captures complex patterns
-        """
-    )
-
-    st.markdown(
-        """
-        ### Metrics
-        - Accuracy, Precision, Recall, F1-Score  
-        - Confusion Matrix visualization
-        """
-    )
-
-    st.markdown(
-        """
-        ### Technical Stack
-        - **Language:** Python 3.x  
-        - **Framework:** Streamlit  
-        - **Libraries:** scikit-learn, pandas, numpy, plotly  
-        """
-    )
-
-    st.markdown("### Installation and Deployment")
-    st.code("pip install -r requirements.txt\nstreamlit run app.py", language="bash")
-
-    st.markdown(
-        """
-        ---
-        **Project Submitted by:** Jean Faith Marie Patula & Sean Endriga  
-        **Date:** April 25, 2026
-        """
-    )
